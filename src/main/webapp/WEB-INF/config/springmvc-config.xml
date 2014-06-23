@@ -15,29 +15,4 @@
 		<property name="prefix" value="/WEB-INF/jsps/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
-
-
-	<!-- Definle the exporter and url point for the HTTP Invoker RMI -->
-
-	<!-- Mapping configurations from URLs to request handler beans -->
-	<bean id="urlMapping"
-		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-		<property name="mappings">
-			<props>
-				<!-- the key define the URL path,  the URL to the exporter -->
-				<prop key="/calc.service">calculateServiceExporter</prop>
-			</props>
-		</property>
-	</bean>
-
-
-	<bean id="calculateServiceExporter"
-		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
-		<property name="service" ref="calculateService">
-		</property>
-		<property name="serviceInterface" value="com.leo.han.services.CalculateService">
-		</property>
-	</bean>
-
-
 </beans>
