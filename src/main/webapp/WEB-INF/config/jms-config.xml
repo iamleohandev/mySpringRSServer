@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jms="http://www.springframework.org/schema/jms"
 	xsi:schemaLocation="http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
@@ -17,12 +18,18 @@
 		<constructor-arg value="my.jms.service.queue"></constructor-arg>
 	</bean>
 
-	<!-- Step3: configure the jmsTemplate to send/receive message according 
-		to the Message Broker and Destination -->
-	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<property name="connectionFactory" ref="connectionFactory"></property>
-		<!-- Use the default destination name -->
-		<property name="defaultDestinationName" value="my.jms.service.queue">
+
+	<!-- Step4: wrap the service as the JmsInvokerServiceExporter -->
+	<bean id="sampleServiceExporter"
+		class="org.springframework.jms.remoting.JmsInvokerServiceExporter">
+		<property name="service" ref="sampleService"></property>
+		<property name="serviceInterface" value="com.leo.han.services.SampleService">
 		</property>
 	</bean>
+	
+	<!-- Step5: configure the listener for the exporter -->
+	<jms:listener-container connection-factory="connectionFactory">
+		<jms:listener destination="my.jms.service.queue"
+			ref="sampleServiceExporter" />
+	</jms:listener-container>
 </beans>
